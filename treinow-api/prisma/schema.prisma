@@ -1,0 +1,48 @@
+// This is your Prisma schema file,
+// learn more about it in the docs: https://pris.ly/d/prisma-schema
+
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "sqlite"
+}
+
+model User {
+  id        Int      @id @default(autoincrement())
+  name      String
+  email     String   @unique
+  document  String   @unique
+  type      String   // "PERSONAL" ou "STUDENT"
+  password  String
+  // Relacionamentos
+  workoutsCreated   Workout[]        @relation("PersonalCreator")
+  studentHistory    WorkoutHistory[] @relation("StudentHistory")
+  ratings           Rating[]         @relation("PersonalRatings")
+
+}
+
+model Workout {
+  id         Int      @id @default(autoincrement())
+  name       String
+  duration   Int
+  date       DateTime @default(now())
+  personalId Int
+  personal   User     @relation("PersonalCreator", fields: [personalId], references: [id], onDelete: Cascade)
+}
+
+model WorkoutHistory {
+  id        Int      @id @default(autoincrement())
+  startTime DateTime @default(now())
+  studentId Int
+  student   User     @relation("StudentHistory", fields: [studentId], references: [id], onDelete: Cascade)
+}
+
+model Rating {
+  id         Int      @id @default(autoincrement())
+  score      Int      //1-5
+  personalId Int
+  personal   User    @relation("PersonalRatings",  fields: [personalId], references: [id], onDelete: Cascade)
+}
+
