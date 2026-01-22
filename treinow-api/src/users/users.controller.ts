@@ -1,34 +1,37 @@
-import { Controller, Get, Post, Body, Patch, Param, Delete } from '@nestjs/common';
+import { 
+  Controller, 
+  Get, 
+  Post, 
+  Body, 
+  Patch, 
+  Param, 
+  Delete, 
+  UseGuards, 
+  Req 
+} from '@nestjs/common';
 import { UsersService } from './users.service';
 import { CreateUserDto } from './dto/create-user.dto';
-import { UpdateUserDto } from './dto/update-user.dto';
+import { JwtAuthGuard } from '../auth/jwt-auth.guard';
 
-@Controller('users')
+@Controller() // Deixamos vazio para usar rotas personalizadas
 export class UsersController {
   constructor(private readonly usersService: UsersService) {}
 
-  @Post()
+  @Post('users') // Rota de cadastro
   create(@Body() createUserDto: CreateUserDto) {
     return this.usersService.create(createUserDto);
   }
 
-  @Get()
-  findAll() {
-    return this.usersService.findAll();
+  // Requisito: Deletar conta (DELETE /account/delete)
+  @UseGuards(JwtAuthGuard)
+  @Delete('account/delete')
+  async remove(@Req() req) {
+    // Usamos o ID que vem do Token (req.user.userId) por segurança
+    return this.usersService.remove(req.user.userId);
   }
 
-  @Get(':id')
+  // Outras rotas auxiliares (opcional para o desafio, mas bom para teste)
+  @Get('users/:id')
   findOne(@Param('id') id: string) {
-    return this.usersService.findOne(+id);
-  }
-
-  @Patch(':id')
-  update(@Param('id') id: string, @Body() updateUserDto: UpdateUserDto) {
-    return this.usersService.update(+id, updateUserDto);
-  }
-
-  @Delete(':id')
-  remove(@Param('id') id: string) {
-    return this.usersService.remove(+id);
-  }
+    return this.usersService.findOne(+id);}
 }

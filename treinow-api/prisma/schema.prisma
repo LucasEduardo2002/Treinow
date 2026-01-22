@@ -27,7 +27,7 @@ model Workout {
   id         Int      @id @default(autoincrement())
   name       String
   duration   Int
-  date       DateTime @default(now())
+  createdAt       DateTime @default(now())
   personalId Int
   personal   User     @relation("PersonalCreator", fields: [personalId], references: [id], onDelete: Cascade)
 }

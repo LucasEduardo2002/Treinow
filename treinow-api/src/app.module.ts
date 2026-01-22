@@ -7,9 +7,10 @@ import { UsersModule } from './users/users.module';
 import { AuthService } from './auth/auth.service';
 import { AuthController } from './auth/auth.controller';
 import { AuthModule } from './auth/auth.module';
+import { WorkoutsModule } from './workouts/workouts.module';
 
 @Module({
-  imports: [PrismaModule, UsersModule, AuthModule],
+  imports: [PrismaModule, UsersModule, AuthModule, WorkoutsModule],
   controllers: [AppController, AuthController],
   providers: [AppService, PrismaService, AuthService],
 })

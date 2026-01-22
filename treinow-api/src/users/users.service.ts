@@ -1,4 +1,4 @@
-import { ConflictException, Injectable } from '@nestjs/common';
+import { ConflictException, Injectable, NotFoundException } from '@nestjs/common';
 import { PrismaService } from '../prisma/prisma.service';
 import { CreateUserDto } from './dto/create-user.dto';
 import * as bcrypt from 'bcrypt';
@@ -39,5 +39,23 @@ export class UsersService {
   // Método auxiliar para o Login que faremos depois
   async findByDocument(document: string) {
     return this.prisma.user.findUnique({ where: { document } });
+  }
+
+  async findOne(id: number) {
+  const user = await this.prisma.user.findUnique({
+    where: { id },
+  });
+
+  if (!user) {
+    throw new NotFoundException(`Usuário com ID ${id} não encontrado`);
+  }
+
+  // Removemos a senha do retorno por segurança
+  const { password, ...result } = user;
+  return result;
+}
+
+  async remove(userId: number) {
+    return this.prisma.user.delete({ where: { id: userId } });
   }
 }
