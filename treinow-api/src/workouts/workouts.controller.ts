@@ -12,6 +12,15 @@ import { WorkoutsService } from './workouts.service';
 import { CreateWorkoutDto } from './dto/create-workout.dto';
 import { JwtAuthGuard } from '../auth/jwt-auth.guard';
 
+/**
+ * WorkoutsController - Gerencia as rotas de treinos
+ * 
+ * Endpoints:
+ * - Alunos: Iniciar treino, avaliar personal trainer
+ * - Personal Trainers: Criar treino, listar treinos
+ * 
+ * Todas as rotas requerem autenticação via JWT
+ */
 @Controller() // Deixamos vazio para usar as rotas exatas do desafio
 export class WorkoutsController {
   constructor(private readonly workoutsService: WorkoutsService) {}
@@ -20,7 +29,12 @@ export class WorkoutsController {
    * ENDPOINTS PARA ALUNOS
    */
 
-  // Registro de início de treino (POST /store/workout)
+  /**
+   * Registra o início de um treino
+   * @route POST /store/workout
+   * @returns Histórico do treino iniciado
+   * @requires Autenticação JWT
+   */
   @UseGuards(JwtAuthGuard)
   @Post('store/workout')
   async registerStart(@Req() req) {
@@ -28,7 +42,15 @@ export class WorkoutsController {
     return this.workoutsService.registerStart(req.user.userId);
   }
 
-  // Avaliar personal (POST /personal/:personal_id/rating)
+  /**
+   * Avalia um personal trainer
+   * @route POST /personal/:personal_id/rating
+   * @param personal_id - ID do personal trainer
+   * @param score - Pontuação de 1 a 5 (no body)
+   * @returns Avaliação criada
+   * @requires Autenticação JWT
+   * @throws BadRequestException Se score fora do intervalo 1-5
+   */
   @UseGuards(JwtAuthGuard)
   @Post('personal/:personal_id/rating')
   async ratePersonal(
@@ -49,7 +71,13 @@ export class WorkoutsController {
    * ENDPOINTS PARA PERSONAL TRAINER
    */
 
-  // Cadastro de treino (POST /personal/workout)
+  /**
+   * Cria um novo treino
+   * @route POST /personal/workout
+   * @param createWorkoutDto - Dados do treino (nome e duração)
+   * @returns Treino criado
+   * @requires Autenticação JWT
+   */
   @UseGuards(JwtAuthGuard)
   @Post('personal/workout')
   async create(@Body() createWorkoutDto: CreateWorkoutDto, @Req() req) {
@@ -57,7 +85,12 @@ export class WorkoutsController {
     return this.workoutsService.createWorkout(req.user.userId, createWorkoutDto);
   }
 
-  // Consulta de treinos (GET /personal/workout)
+  /**
+   * Lista todos os treinos do personal trainer autenticado
+   * @route GET /personal/workout
+   * @returns Array de treinos criados pelo personal
+   * @requires Autenticação JWT
+   */
   @UseGuards(JwtAuthGuard)
   @Get('personal/workout')
   async findAll(@Req() req) {

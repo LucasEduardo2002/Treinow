@@ -1,23 +1,204 @@
-<p align="center">
-  <a href="http://nestjs.com/" target="blank"><img src="https://nestjs.com/img/logo-small.svg" width="120" alt="Nest Logo" /></a>
-</p>
+# Treinow API
 
-[circleci-image]: https://img.shields.io/circleci/build/github/nestjs/nest/master?token=abc123def456
-[circleci-url]: https://circleci.com/gh/nestjs/nest
+## 📋 Descrição da Aplicação
 
-  <p align="center">A progressive <a href="http://nodejs.org" target="_blank">Node.js</a> framework for building efficient and scalable server-side applications.</p>
-    <p align="center">
-<a href="https://www.npmjs.com/~nestjscore" target="_blank"><img src="https://img.shields.io/npm/v/@nestjs/core.svg" alt="NPM Version" /></a>
-<a href="https://www.npmjs.com/~nestjscore" target="_blank"><img src="https://img.shields.io/npm/l/@nestjs/core.svg" alt="Package License" /></a>
-<a href="https://www.npmjs.com/~nestjscore" target="_blank"><img src="https://img.shields.io/npm/dm/@nestjs/common.svg" alt="NPM Downloads" /></a>
-<a href="https://circleci.com/gh/nestjs/nest" target="_blank"><img src="https://img.shields.io/circleci/build/github/nestjs/nest/master" alt="CircleCI" /></a>
-<a href="https://discord.gg/G7Qnnhy" target="_blank"><img src="https://img.shields.io/badge/discord-online-brightgreen.svg" alt="Discord"/></a>
-<a href="https://opencollective.com/nest#backer" target="_blank"><img src="https://opencollective.com/nest/backers/badge.svg" alt="Backers on Open Collective" /></a>
-<a href="https://opencollective.com/nest#sponsor" target="_blank"><img src="https://opencollective.com/nest/sponsors/badge.svg" alt="Sponsors on Open Collective" /></a>
-  <a href="https://paypal.me/kamilmysliwiec" target="_blank"><img src="https://img.shields.io/badge/Donate-PayPal-ff3f59.svg" alt="Donate us"/></a>
-    <a href="https://opencollective.com/nest#sponsor"  target="_blank"><img src="https://img.shields.io/badge/Support%20us-Open%20Collective-41B883.svg" alt="Support us"></a>
-  <a href="https://twitter.com/nestframework" target="_blank"><img src="https://img.shields.io/twitter/follow/nestframework.svg?style=social&label=Follow" alt="Follow us on Twitter"></a>
-</p>
+A aplicação **Treinow** é um sistema de gerenciamento de treinos, desenvolvido utilizando o framework **NestJS**. O objetivo principal é permitir que os usuários possam criar, gerenciar e acompanhar seus treinos de forma eficiente e escalável.
+
+## 🛠️ Tecnologias Utilizadas
+
+- **NestJS**: Um framework para construir aplicações Node.js escaláveis e eficientes com arquitetura modular
+- **TypeScript**: Linguagem de programação que oferece tipagem estática para JavaScript
+- **Prisma**: Um ORM (Object-Relational Mapping) que facilita a interação com o banco de dados
+- **SQLite**: Um banco de dados leve e fácil de usar, ideal para desenvolvimento e testes
+- **Passport & JWT**: Autenticação e geração de tokens JWT para segurança
+
+## 📁 Estrutura do Projeto
+
+A estrutura do projeto é organizada em módulos, onde cada módulo é responsável por uma parte específica da aplicação:
+
+```
+treinow-api/
+├── src/
+│   ├── auth/              # Módulo de autenticação (login, JWT, estratégias)
+│   ├── users/             # Módulo de usuários (CRUD de usuários)
+│   ├── workouts/          # Módulo de treinos (criação e gerenciamento de treinos)
+│   ├── prisma/            # Configuração do Prisma e banco de dados
+│   ├── app.module.ts      # Módulo principal da aplicação
+│   └── main.ts            # Ponto de entrada da aplicação
+├── prisma/
+│   ├── schema.prisma      # Definição do schema do banco de dados
+│   └── migrations/        # Histórico de migrações do banco de dados
+└── package.json           # Dependências e scripts do projeto
+```
+
+## 🏗️ Arquitetura e Componentes Principais
+
+### 1. **Auth Module** (`src/auth/`)
+- **Responsabilidade**: Gerenciar autenticação de usuários
+- **Componentes**:
+  - `auth.service.ts`: Lógica de autenticação
+  - `auth.controller.ts`: Endpoints de autenticação
+  - `jwt.strategy.ts`: Estratégia JWT para Passport
+  - `jwt-auth.guard.ts`: Guard para proteger rotas autenticadas
+
+### 2. **Users Module** (`src/users/`)
+- **Responsabilidade**: Gerenciar dados de usuários
+- **Componentes**:
+  - `users.service.ts`: Lógica de CRUD de usuários
+  - `users.controller.ts`: Endpoints de usuários
+  - DTOs para validação de dados
+
+### 3. **Workouts Module** (`src/workouts/`)
+- **Responsabilidade**: Gerenciar treinos e histórico de treinos
+- **Componentes**:
+  - `workouts.service.ts`: Lógica de criação e gerenciamento de treinos
+  - `workouts.controller.ts`: Endpoints de treinos
+  - DTOs para validação de dados de treinos
+
+### 4. **Prisma Module** (`src/prisma/`)
+- **Responsabilidade**: Configuração e conexão com o banco de dados
+- **Componentes**:
+  - `prisma.service.ts`: Instância global do PrismaClient
+  - Gerenciamento de conexões com SQLite
+
+## 🔄 Fluxo de Dados
+
+1. **Requisição**: Chega ao Controller
+2. **Validação**: DTO valida os dados de entrada
+3. **Processamento**: Service executa a lógica de negócio
+4. **Banco de Dados**: Prisma interage com SQLite
+5. **Resposta**: Controller retorna o resultado
+
+## 🚀 Como Executar a Aplicação
+
+### Pré-requisitos
+- Node.js (v16 ou superior)
+- npm ou yarn
+
+### Passos
+
+1. **Clone o repositório**
+   ```bash
+   git clone <url-do-repositorio>
+   cd treinow-api
+   ```
+
+2. **Instale as dependências**
+   ```bash
+   npm install
+   ```
+
+3. **Configure as variáveis de ambiente**
+   - Crie um arquivo `.env` na raiz do projeto
+   - Defina `DATABASE_URL="file:./dev.db"`
+
+4. **Execute as migrações do banco de dados**
+   ```bash
+   npx prisma migrate dev
+   ```
+
+5. **Inicie o servidor**
+   ```bash
+   npm run start:dev
+   ```
+
+6. **Acesse a aplicação**
+   - A aplicação estará disponível em `http://localhost:3000`
+   - Swagger UI (se configurado): `http://localhost:3000/api`
+
+## 📝 Endpoints Principais
+
+### Autenticação
+- `GET /auth` - Verifica status de autenticação
+- `POST /auth/login` - Realiza login de usuário
+
+### Usuários
+- `POST /users` - Cria novo usuário
+- `GET /users/:id` - Obtém dados de um usuário
+- `DELETE /account/delete` - Deleta conta do usuário
+
+### Treinos
+- `POST /store/workout` - Registra início de treino
+- `POST /personal/workout` - Cria novo treino (Personal Trainer)
+- `GET /personal/workout` - Lista treinos do Personal Trainer
+- `POST /personal/:personal_id/rating` - Avalia um Personal Trainer
+
+## 🔐 Segurança
+
+- **JWT (JSON Web Tokens)**: Implementado para autenticação segura
+- **Guards**: Protegem rotas que requerem autenticação
+- **Validação**: DTOs validam dados de entrada
+- **Senha**: (Configurar hash de senha com bcrypt)
+
+## 🧪 Testes
+
+Para executar testes:
+```bash
+npm run test
+```
+
+Para testes e2e:
+```bash
+npm run test:e2e
+```
+
+## 📦 Dependências Principais
+
+- `@nestjs/common`: Decoradores e utilitários NestJS
+- `@nestjs/core`: Core do NestJS
+- `@nestjs/jwt`: Módulo JWT para autenticação
+- `@nestjs/passport`: Integração com Passport
+- `@prisma/client`: Cliente do Prisma
+- `prisma`: ORM para gerenciamento de banco de dados
+- `passport-jwt`: Estratégia JWT para Passport
+- `better-sqlite3`: Driver SQLite
+
+## 🔧 Troubleshooting
+
+### Erro: "PrismaClient not initialized"
+- Execute `npx prisma generate` para regenerar o cliente
+
+### Erro: "Port 3000 already in use"
+- Mude a porta com `PORT=3001 npm run start:dev`
+
+### Erro: "Database connection failed"
+- Verifique se o caminho do banco de dados em `.env` está correto
+
+## 📚 Documentação Adicional
+
+- [NestJS Documentation](https://docs.nestjs.com/)
+- [Prisma Documentation](https://www.prisma.io/docs/)
+- [Passport.js Documentation](http://www.passportjs.org/)
+
+## 👨‍💻 Desenvolvimento
+
+### Criar um novo módulo
+```bash
+nest generate module <nome-do-modulo>
+```
+
+### Criar um novo controller
+```bash
+nest generate controller <nome-do-modulo>/<nome-do-controller>
+```
+
+### Criar um novo service
+```bash
+nest generate service <nome-do-modulo>/<nome-do-service>
+```
+
+## 🤝 Contribuição
+
+Sinta-se à vontade para contribuir com melhorias e correções:
+1. Faça um fork do repositório
+2. Crie uma branch para sua feature (`git checkout -b feature/AmazingFeature`)
+3. Commit suas mudanças (`git commit -m 'Add some AmazingFeature'`)
+4. Push para a branch (`git push origin feature/AmazingFeature`)
+5. Abra um Pull Request
+
+## 📄 Licença
+
+Este projeto está sob licença MIT. Veja o arquivo LICENSE para mais detalhes.
   <!--[![Backers on Open Collective](https://opencollective.com/nest/backers/badge.svg)](https://opencollective.com/nest#backer)
   [![Sponsors on Open Collective](https://opencollective.com/nest/sponsors/badge.svg)](https://opencollective.com/nest#sponsor)-->
 
